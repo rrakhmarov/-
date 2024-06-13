@@ -1,0 +1,190 @@
+НОМЕР 1 C++:
+#include <iostream>
+#include <complex>
+#include <cmath>
+
+using namespace std;
+
+int main() {
+    // Объявление комплексных чисел
+    complex<double> z1(2, 1);
+    complex<double> z2(3, 1);
+    complex<double> z3(1, 2);
+
+    // Сумма
+    complex<double> sum = z1 + z2;
+    cout << "Сумма: " << sum << endl;
+
+    // Разность
+    complex<double> difference = z1 - z2;
+    cout << "Разность: " << difference << endl;
+
+    // Произведение
+    complex<double> product = z1 * z2;
+    cout << "Произведение: " << product << endl;
+
+    // Частное
+    complex<double> quotient = z1 / z2;
+    cout << "Частное: " << quotient << endl;
+
+    // Четвертая степень
+    complex<double> fourthPower = pow(z3, 4);
+    cout << "Четвертая степень: " << fourthPower << endl;
+
+    // Корень третьей степени
+    complex<double> cubeRoot = pow(z3, 1.0/3.0);
+    cout << "Корень третьей степени: " << cubeRoot << endl;
+
+    return 0;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+НОМЕР 1 Python:
+from cmath import *
+
+# Объявление комплексных чисел
+z1 = complex(2, 1)
+z2 = complex(3, 1)
+z3 = complex(1, 2)
+
+# Сумма
+sum = z1 + z2
+print("Сумма:", sum)
+
+# Разность
+difference = z1 - z2
+print("Разность:", difference)
+
+# Произведение
+product = z1 * z2
+print("Произведение:", product)
+
+# Частное
+quotient = z1 / z2
+print("Частное:", quotient)
+
+# Четвертая степень
+fourthPower = z3 * 4
+print("Четвертая степень:", fourthPower)
+
+# Корень третьей степени
+cubeRoot = z3 * (1/3)
+print("Корень третьей степени:", cubeRoot)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+НОМЕР 2 C++:
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+double func(double x) {
+    return log(x) + (x + 1) * (x + 1) * (x + 1);
+}
+
+double func_derivative(double x) {
+  return 1/x + 3 * (x + 1) * (x + 1);
+}
+
+double dichotomy(double a, double b, double eps) {
+    while (b - a > eps) {
+        double mid = (a + b) / 2;
+        if (func(mid) > 0) {
+            b = mid;
+        } else {
+            a = mid;
+        }
+    }
+    return (a + b) / 2;
+}
+
+double iterations(double x0, double eps) {
+    double x1 = x0 - func(x0) / func_derivative(x0);
+    while (abs(x1 - x0) > eps) {
+        x0 = x1;
+        x1 = x0 - func(x0) / func_derivative(x0);
+    }
+    return x1;
+}
+
+double chords(double x0, double x1, double eps) {
+    while (abs(x1 - x0) > eps) {
+        double x2 = x1 - (func(x1) * (x1 - x0)) / (func(x1) - func(x0));
+        x0 = x1;
+        x1 = x2;
+    }
+    return x1;
+}
+
+double newton(double x0, double eps) {
+    while (abs(func(x0)) > eps) {
+        x0 = x0 - func(x0) / func_derivative(x0);
+    }
+    return x0;
+}
+
+int main() {
+    double a = 0.1; // Изменено начальное значение a для гарантии положительного аргумента в log
+    double b = 2;
+    double eps = 1e-6;
+
+    cout << "Дихотомия: " << dichotomy(a, b, eps) << endl;
+    cout << "Итерации: " << iterations(1, eps) << endl;
+    cout << "Хорды: " << chords(a, b, eps) << endl;
+    cout << "Ньютон: " << newton(1, eps) << endl;
+
+    return 0;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+НОМЕР 2 Python:
+import math
+
+def func(x):
+  """Функция, для которой ищем корень."""
+  return math.log(x) + (x + 1) * (x + 1) * (x + 1)
+
+def func_derivative(x):
+  """Производная функции."""
+  return 1/x + 3 * (x + 1) * (x + 1)
+
+def dichotomy(a, b, eps):
+  """Метод дихотомии."""
+  while b - a > eps:
+    mid = (a + b) / 2
+    if func(mid) > 0:
+      b = mid
+    else:
+      a = mid
+  return (a + b) / 2
+
+def iterations(x0, eps):
+  """Метод итераций (метод касательных)."""
+  x1 = x0 - func(x0) / func_derivative(x0)
+  while abs(x1 - x0) > eps:
+    x0 = x1
+    x1 = x0 - func(x0) / func_derivative(x0)
+  return x1
+
+def chords(x0, x1, eps):
+  """Метод хорд."""
+  while abs(x1 - x0) > eps:
+    x2 = x1 - (func(x1) * (x1 - x0)) / (func(x1) - func(x0))
+    x0 = x1
+    x1 = x2
+  return x1
+
+def newton(x0, eps):
+  """Метод Ньютона."""
+  while abs(func(x0)) > eps:
+    x0 = x0 - func(x0) / func_derivative(x0)
+  return x0
+
+if __name__ == "__main__":
+  a = 0.1  # Изменено начальное значение a для гарантии положительного аргумента в log
+  b = 2
+  eps = 1e-6
+
+  print(f"Дихотомия: {dichotomy(a, b, eps)}")
+  print(f"Итерации: {iterations(1, eps)}")
+  print(f"Хорды: {chords(a, b, eps)}")
+  print(f"Ньютон: {newton(1, eps)}")
+
+
