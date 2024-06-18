@@ -1,1 +1,262 @@
+НОМЕР 1 C++:
+#include <iostream>
+#include <cmath>
 
+using namespace std;
+
+struct Point {
+    double x;
+    double y;
+};
+
+struct Line {
+    double a; // Коэффициент наклона
+    double b; // Свободный член
+};
+
+// Функция для расчета расстояния от точки до прямой
+double distancePointToLine(const Point& point, const Line& line) {
+    return abs(line.a * point.x - point.y + line.b) / sqrt(line.a * line.a + 1);
+}
+
+// Функция для нахождения точки пересечения двух прямых
+Point intersectionPoint(const Line& line1, const Line& line2) {
+    Point intersection;
+    intersection.x = (line2.b - line1.b) / (line1.a - line2.a);
+    intersection.y = line1.a * intersection.x + line1.b;
+    return intersection;
+}
+
+// Функция для расчета расстояния между двумя точками
+double distanceBetweenPoints(const Point& point1, const Point& point2) {
+    return sqrt((point2.x - point1.x) * (point2.x - point1.x) + (point2.y - point1.y) * (point2.y - point1.y));
+}
+
+// Функция для расчета угла между двумя прямыми
+double angleBetweenLines(const Line& line1, const Line& line2) {
+    return atan(abs(line1.a - line2.a) / (1 + line1.a * line2.a));
+}
+
+int main() {
+    // Задаем параметры прямых и точки
+    Line line1 = {2, 3};
+    Line line2 = {-1, 1};
+    Point point = {1, 2};
+
+    // Расчет расстояний от точки до прямых
+    double distance1 = distancePointToLine(point, line1);
+    double distance2 = distancePointToLine(point, line2);
+
+    // Нахождение точки пересечения прямых
+    Point intersection = intersectionPoint(line1, line2);
+
+    // Расчет расстояния от заданной точки до точки пересечения
+    double distanceToIntersection = distanceBetweenPoints(point, intersection);
+
+    // Расчет угла между прямыми
+    double angle = angleBetweenLines(line1, line2);
+
+    // Вывод результатов
+    cout << "Расстояние от точки до первой прямой: " << distance1 << endl;
+    cout << "Расстояние от точки до второй прямой: " << distance2 << endl;
+    cout << "Точка пересечения прямых: (" << intersection.x << ", " << intersection.y << ")" << endl;
+    cout << "Расстояние от заданной точки до точки пересечения: " << distanceToIntersection << endl;
+    cout << "Угол между прямыми: " << angle << " радиан" << endl;
+    cout << "Угол между прямыми: " << angle * 180 / M_PI << " градусов" << endl;
+
+    return 0;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+НОМЕР 2 С++:
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+struct Point {
+    double x, y, z;
+};
+
+struct Line {
+    double a, b, c, d;
+};
+
+double crossProduct(Point a, Point b) {
+    return (a.x * b.y - a.y * b.x);
+}
+
+double dotProduct(Point a, Point b) {
+    return (a.x * b.x + a.y * b.y);
+}
+
+double angleBetweenLines(Line l1, Line l2) {
+    double dot = l1.a*l2.a + l1.b*l2.b + l1.c*l2.c;
+    double cross = l1.a*l2.b - l1.b*l2.a;
+    return atan2(cross, dot);
+}
+
+bool areLinesParallel(Line l1, Line l2) {
+    return (l1.a*l2.b - l1.b*l2.a == 0);
+}
+
+double distanceBetweenParallelLines(Line l1, Line l2, Point p) {
+    double num = abs(l1.a*(l2.d - p.z) - l1.b*(l2.c - p.x) + l1.c*(l2.b - p.y));
+    double denom = sqrt(l1.a*l1.a + l1.b*l1.b + l1.c*l1.c);
+    return num/denom;
+}
+
+double distanceToLine(Line l, Point p) {
+    double num = abs(l.a*(l.d - p.z) - l.b*(l.c - p.x) + l.c*(l.b - p.y));
+    double denom = sqrt(l.a*l.a + l.b*l.b + l.c*l.c);
+    return num/denom;
+}
+
+Point intersectionPoint(Line l1, Line l2) {
+    Point p;
+    double determinant = l1.a*l2.b - l1.b*l2.a;
+    p.x = (l2.b*l1.d - l1.b*l2.d) / determinant;
+    p.y = (l1.a*l2.d - l2.a*l1.d) / determinant;
+    p.z = (l1.a*l2.c - l2.a*l1.c) / determinant;
+    return p;
+}
+
+double distanceFromPointToIntersection(Point p, Point q) {
+    return sqrt((p.x - q.x)*(p.x - q.x) + (p.y - q.y)*(p.y - q.y) + (p.z - q.z)*(p.z - q.z));
+}
+
+int main() {
+    // Generate random parameters for lines and point
+    srand(time(0));
+    Line l1 = {rand() % 10, rand() % 10, rand() % 10, rand() % 10};
+    Line l2 = {rand() % 10, rand() % 10, rand() % 10, rand() % 10};
+    Point p = {rand() % 10, rand() % 10, rand() % 10};
+
+    // Calculate angle between lines
+    double angle = angleBetweenLines(l1, l2);
+    cout << "Angle between lines: " << angle << " radians" << endl;
+
+    // Check for parallelism
+    bool parallel = areLinesParallel(l1, l2);
+    cout << "Lines are " << (parallel ? "" : "not ") << "parallel" << endl;
+
+    // Calculate distance between parallel lines
+    if (parallel) {
+        double distance = distanceBetweenParallelLines(l1, l2, p);
+        cout << "Distance between parallel lines: " << distance << endl;
+    }
+
+    // Calculate distances from point to lines
+    double distance1 = distanceToLine(l1, p);
+    double distance2 = distanceToLine(l2, p);
+    cout << "Distance from point to line 1: " << distance1 << endl;
+    cout << "Distance from point to line 2: " << distance2 << endl;
+
+    // If lines are intersecting, find intersection point and distance from point to intersection
+    if (!parallel) {
+        Point intersection = intersectionPoint(l1, l2);
+        double distance3 = distanceFromPointToIntersection(p, intersection);
+        cout << "Intersection point: (" << intersection.x << ", " << intersection.y << ", " << intersection.z << ")" << endl;
+        cout << "Distance from point to intersection: " << distance3 << endl;
+    }
+
+    return 0;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+НОМЕР 3 Python:
+import numpy as np
+
+# Generate random parameters for hyperbola and point
+np.random.seed(0)
+a = np.random.randint(1, 10)
+b = np.random.randint(1, 10)
+c = np.random.randint(1, 10)
+d = np.random.randint(1, 10)
+p = (np.random.randint(1, 10), np.random.randint(1, 10))
+
+# Check if point belongs to hyperbola
+def is_on_hyperbola(a, b, c, d, p):
+    return a*p[0]**2 - b*p[1]**2 - c**2 == d
+
+if is_on_hyperbola(a, b, c, d, p):
+    print("The point lies on the hyperbola.")
+else:
+    print("The point does not lie on the hyperbola.")
+
+# Find coordinates of foci
+foci = ((c/a) * np.sqrt(a**2 + b**2), 0)
+
+# Find lengths of real and imaginary semi-axes
+real_semi_axis = np.sqrt(a**2 + b**2)
+imaginary_semi_axis = np.sqrt(c**2)
+
+# Find eccentricity
+eccentricity = np.sqrt(1 + (b**2 / a**2))
+
+# Find distance between directrices
+distance_between_directrices = 2 * a
+
+# Print results
+print("Coordinates of foci:", foci)
+print("Length of real semi-axis:", real_semi_axis)
+print("Length of imaginary semi-axis:", imaginary_semi_axis)
+print("Eccentricity:", eccentricity)
+print("Distance between directrices:", distance_between_directrices)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+НОМЕР 4 Python:
+import numpy as np
+
+def is_point_on_hyperboloid(point, a, b):
+    x, y, z = point
+    return abs(z - (x*2 / a*2 - y*2 / b*2)) < 1e-6
+
+def is_plane_intersect_hyperboloid(plane_normal, plane_point, a, b):
+    # Проверяем, параллельна ли плоскость оси z
+    if abs(plane_normal[2]) < 1e-6:
+        return True
+    
+    # Подставляем уравнение плоскости в уравнение гиперболоида
+    x, y, z = plane_point
+    return abs(z - (x*2 / a*2 - y*2 / b*2)) < 1e-6
+
+def is_line_intersect_hyperboloid(line_direction, line_point, a, b):
+    # Проверяем, параллельна ли прямая оси z
+    if abs(line_direction[2]) < 1e-6:
+        return True
+    
+    # Подставляем параметрическое уравнение прямой в уравнение гиперболоида
+    x, y, z = line_point
+    t = np.arange(-10, 10, 0.1)
+    for t_value in t:
+        x += line_direction[0] * t_value
+        y += line_direction[1] * t_value
+        z += line_direction[2] * t_value
+        if abs(z - (x*2 / a*2 - y*2 / b*2)) < 1e-6:
+            return True
+    return False
+
+# Задаем параметры гиперболоида
+a = 2
+b = 3
+
+# Задаем параметры плоскости
+plane_normal = np.array([1, 2, 3])
+plane_point = np.array([1, 2, 3])
+
+# Задаем параметры прямой
+line_direction = np.array([1, 1, 1])
+line_point = np.array([0, 0, 0])
+
+# Задаем координаты точки
+point = np.array([1, 1, 1])
+
+# Проверяем принадлежность точки гиперболоиду
+is_on_hyperboloid = is_point_on_hyperboloid(point, a, b)
+print("Точка принадлежит гиперболоиду:", is_on_hyperboloid)
+
+# Проверяем пересечение плоскости с гиперболоидом
+is_plane_intersect = is_plane_intersect_hyperboloid(plane_normal, plane_point, a, b)
+print("Плоскость пересекает гиперболоид:", is_plane_intersect)
+
+# Проверяем пересечение прямой с гиперболоидом
+is_line_intersect = is_line_intersect_hyperboloid(line_direction, line_point, a, b)
+print("Прямая пересекает гиперболоид:", is_line_intersect)
