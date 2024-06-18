@@ -1,1 +1,101 @@
+НОМЕР 1 Python:
+import numpy as np
+import scipy.optimize as opt
 
+def f(x):
+  return np.exp(x[0]*2 + x[1]*2) + np.log(4 + x[0]*2 + 2*x[1]*2)
+
+def coordinate_descent(f, x0, tol=1e-5, max_iter=1000):
+  x = np.array(x0)
+  n = len(x)
+  for _ in range(max_iter):
+    x_old = np.copy(x)
+    for i in range(n):
+      def func_to_minimize(xi):
+        x_copy = np.copy(x)
+        x_copy[i] = xi
+        return f(x_copy)
+      res = opt.minimize_scalar(func_to_minimize)
+      x[i] = res.x
+    if np.linalg.norm(x - x_old) < tol:
+      break
+  return x
+
+x0 = [1.0, 1.0] # начальная точка
+result = coordinate_descent(f, x0)
+print("Оптимальные значения переменных:", result)
+print("Значение функции в оптимуме:", f(result))
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+НОМЕР 2 C++:
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Функция, для которой мы ищем минимум
+double f(double x1, double x2) {
+  return x1 * x1 + x2 * x2 + x1 * x2 + 4 * x1 + 3 * x2;
+}
+
+// Градиент функции f
+vector<double> gradient(double x1, double x2) {
+  vector<double> grad(2);
+  grad[0] = 2 * x1 + x2 + 4;
+  grad[1] = 2 * x2 + x1 + 3;
+  return grad;
+}
+
+// Алгоритм наискорейшего спуска
+vector<double> steepest_descent(double x0, double x1, double alpha, double eps) {
+  vector<double> x(2);
+  x[0] = x0;
+  x[1] = x1;
+
+  while (true) {
+    // Вычисление градиента
+    vector<double> grad = gradient(x[0], x[1]);
+
+    // Шаг по градиенту
+    vector<double> step(2);
+    step[0] = -alpha * grad[0];
+    step[1] = -alpha * grad[1];
+
+    // Новая точка
+    vector<double> new_x(2);
+    new_x[0] = x[0] + step[0];
+    new_x[1] = x[1] + step[1];
+
+    // Проверка условия остановки
+    double norm = 0;
+    for (int i = 0; i < 2; ++i) {
+      norm += (new_x[i] - x[i]) * (new_x[i] - x[i]);
+    }
+    if (norm < eps) {
+      return new_x;
+    }
+
+    // Переход к новой точке
+    x = new_x;
+  }
+}
+
+int main() {
+  // Начальная точка
+  double x0 = 0;
+  double x1 = 0;
+
+  // Шаг по градиенту
+  double alpha = 0.01;
+
+  // Точность
+  double eps = 1e-6;
+
+  // Поиск минимума
+  vector<double> minimum = steepest_descent(x0, x1, alpha, eps);
+
+  // Вывод результата
+  cout << "Минимум: (" << minimum[0] << ", " << minimum[1] << ")" << endl;
+  cout << "Значение функции в минимуме: " << f(minimum[0], minimum[1]) << endl;
+
+  return 0;
+}
